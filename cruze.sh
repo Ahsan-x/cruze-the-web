@@ -81,16 +81,16 @@ pathFinders(){
 scanSuspect(){
   echo -e "\e[91m-------------------looking for vulnerable endpoints----------------------------------\e[0m"
   mkdir $dir/paramlist
-  cat $dir/waybackurls.txt | gf redirect > $dir/paramlist/redirect.txt
-  cat $dir/waybackurls.txt | gf ssrf > $dir/paramlist/ssrf.txt
-  cat $dir/waybackurls.txt | gf rce > $dir/paramlist/rce.txt
-  cat $dir/waybackurls.txt | gf idor > $dir/paramlist/idor.txt
-  cat $dir/waybackurls.txt | gf sqli > $dir/paramlist/sqli.txt
-  cat $dir/waybackurls.txt | gf lfi > $dir/paramlist/lfi.txt
-  cat $dir/waybackurls.txt | gf ssti > $dir/paramlist/ssti.txt
-  cat $dir/waybackurls.txt | gf debug_logic > $dir/paramlist/debug_logic.txt
-  cat $dir/waybackurls.txt | gf interestingsubs > $dir/paramlist/interestingsubs.txt
-  cat $dir/waybackurls.txt | grep "=" | tee $dir/domainParam.txt
+  cat $dir/waybackurls.txt | sort -u | gf redirect| httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u > $dir/paramlist/redirect.txt
+  cat $dir/waybackurls.txt | sort -u | gf ssrf | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u  > $dir/paramlist/ssrf.txt
+  cat $dir/waybackurls.txt | sort -u | gf rce | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u   > $dir/paramlist/rce.txt
+  cat $dir/waybackurls.txt | sort -u | gf idor | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u > $dir/paramlist/idor.txt
+  cat $dir/waybackurls.txt | sort -u | gf sqli | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u > $dir/paramlist/sqli.txt
+  cat $dir/waybackurls.txt | sort -u | gf lfi | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u > $dir/paramlist/lfi.txt
+  cat $dir/waybackurls.txt | sort -u |gf ssti | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u > $dir/paramlist/ssti.txt
+  cat $dir/waybackurls.txt | sort -u |gf debug_logic | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u > $dir/paramlist/debug_logic.txt
+  cat $dir/waybackurls.txt | sort -u |gf interestingsubs | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u > $dir/paramlist/interestingsubs.txt
+  cat $dir/waybackurls.txt | sort -u |grep "=" | httpx -silent -status-code -mc 200 | awk '{print $1}' | sort -u | tee $dir/domainParam.txt
 
   #this is the worst way!!!
   ls $dir/paramlist/ > $dir/gf-endpoints.txt && cat $dir/gf-endpoints.txt | while read endpoints; do echo $endpoints; cat $dir/paramlist/$endpoints; done
